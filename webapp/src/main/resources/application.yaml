@@ -1,0 +1,17 @@
+
+server:
+  port: 8011
+
+spring:
+  profiles:
+    active: default
+  data:
+    mongodb:
+      auto-index-creation: true
+      uri: mongodb+srv://Nishanth:Qtkda0gTZSc41EpX@cluster0.f9nahgw.mongodb.net/sample
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
