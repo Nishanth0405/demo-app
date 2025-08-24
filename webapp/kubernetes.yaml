@@ -74,6 +74,8 @@ spec:
             fieldRef:
               fieldPath: "metadata.namespace"
         image: "715841341054.dkr.ecr.ap-south-1.amazonaws.com/demo:demoapp-49"
+        imagePullSecrets:
+          - name: "ecr-creds"
         imagePullPolicy: "Always"
         name: "demoapp"
         resources:
