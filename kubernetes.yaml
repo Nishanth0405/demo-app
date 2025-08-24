@@ -1,0 +1,90 @@
+---
+apiVersion: "v1"
+kind: "ServiceAccount"
+metadata:
+  labels:
+    app.kubernetes.io/name: "demoapp"
+    app.kubernetes.io/version: "1.0.0-SNAPSHOT"
+  name: "demoapp"
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  annotations:
+    app.dekorate.io/vcs-url: "https://github.com/Nishanth0405/demo-app.git"
+    app.dekorate.io/commit-id: "50dd72f8c09a9c320da04f9444a4da58a684b33f"
+  labels:
+    app.kubernetes.io/name: "demoapp"
+    app.kubernetes.io/version: "1.0.0-SNAPSHOT"
+  name: "demoapp"
+spec:
+  ports:
+  - name: "http"
+    port: 80
+    targetPort: 80
+  selector:
+    app.kubernetes.io/name: "demoapp"
+    app.kubernetes.io/version: "1.0.0-SNAPSHOT"
+  type: "ClusterIP"
+---
+apiVersion: "rbac.authorization.k8s.io/v1"
+kind: "RoleBinding"
+metadata:
+  labels:
+    app.kubernetes.io/name: "demoapp"
+    app.kubernetes.io/version: "1.0.0-SNAPSHOT"
+  name: "demoapp:view"
+roleRef:
+  kind: "ClusterRole"
+  apiGroup: "rbac.authorization.k8s.io"
+  name: "view"
+subjects:
+- kind: "ServiceAccount"
+  name: "demoapp"
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  annotations:
+    app.dekorate.io/vcs-url: "https://github.com/Nishanth0405/demo-app.git"
+    app.dekorate.io/commit-id: "50dd72f8c09a9c320da04f9444a4da58a684b33f"
+  labels:
+    app.kubernetes.io/name: "demoapp"
+    app.kubernetes.io/version: "1.0.0-SNAPSHOT"
+  name: "demoapp"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "demoapp"
+      app.kubernetes.io/version: "1.0.0-SNAPSHOT"
+  template:
+    metadata:
+      annotations:
+        app.dekorate.io/vcs-url: "https://github.com/Nishanth0405/demo-app.git"
+        app.dekorate.io/commit-id: "50dd72f8c09a9c320da04f9444a4da58a684b33f"
+      labels:
+        app.kubernetes.io/name: "demoapp"
+        app.kubernetes.io/version: "1.0.0-SNAPSHOT"
+    spec:
+      containers:
+      - env:
+        - name: "KUBERNETES_NAMESPACE"
+          valueFrom:
+            fieldRef:
+              fieldPath: "metadata.namespace"
+        image: "715841341054.dkr.ecr.ap-south-1.amazonaws.com/demo:demoapp-49"
+        imagePullPolicy: "Always"
+        name: "demoapp"
+        resources:
+          requests:
+            memory: "1024M"
+            cpu: "500m"
+          limits:
+            memory: "1536M"
+            cpu: "700m"
+        ports:
+        - containerPort: 80
+          name: "http"
+          protocol: "TCP"
+      serviceAccount: "demoapp"
