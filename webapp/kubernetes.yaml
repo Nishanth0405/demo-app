@@ -67,6 +67,8 @@ spec:
         app.kubernetes.io/name: "demoapp"
         app.kubernetes.io/version: "1.0.0-SNAPSHOT"
     spec:
+      imagePullSecrets:
+        - name: "ecr-creds"
       containers:
       - env:
         - name: "KUBERNETES_NAMESPACE"
@@ -74,8 +76,6 @@ spec:
             fieldRef:
               fieldPath: "metadata.namespace"
         image: "715841341054.dkr.ecr.ap-south-1.amazonaws.com/demo:demoapp-49"
-        imagePullSecrets:
-          - name: "ecr-creds"
         imagePullPolicy: "Always"
         name: "demoapp"
         resources:
